@@ -1,0 +1,1 @@
+insert into Readers (reader_username, reader_password, reader_full_name) values ('bleki', 'pass', 'Marcin Kruglik');
