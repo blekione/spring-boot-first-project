@@ -25,6 +25,29 @@ public class Reader implements UserDetails {
    @Column(name = "reader_password")
    private String            password;
 
+   /**
+    * Default constructor. Required by JPA specification
+    */
+   protected Reader() {
+   }
+
+   /**
+    * Constructor.
+    *
+    * @param username
+    *           - the user login name
+    * @param fullName
+    *           - the user full name (first and last name)
+    * @param password
+    *           - the user login password
+    */
+   public Reader(String username, String fullName, String password) {
+      super();
+      this.username = username;
+      this.fullName = fullName;
+      this.password = password;
+   }
+
    @Override
    public Collection<? extends GrantedAuthority> getAuthorities() {
       return List.of(new SimpleGrantedAuthority("ROLE_bob"));

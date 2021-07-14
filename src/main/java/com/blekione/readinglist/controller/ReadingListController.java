@@ -9,23 +9,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.blekione.readinglist.domain.AmazonProperties;
 import com.blekione.readinglist.domain.Book;
+import com.blekione.readinglist.repository.ReaderRepository;
 import com.blekione.readinglist.repository.ReadingListRepository;
 
 @Controller
 @RequestMapping("/readingList")
 public class ReadingListController {
    private final ReadingListRepository readingListRepository;
+   private final ReaderRepository readerRepository;
    private final AmazonProperties amazonProperties;
 
    @Autowired
-   public ReadingListController(ReadingListRepository readingListRepository, AmazonProperties amazonProperties) {
+   public ReadingListController(ReadingListRepository readingListRepository, ReaderRepository readerRepository, AmazonProperties amazonProperties) {
       this.readingListRepository = readingListRepository;
+      this.readerRepository = readerRepository;
       this.amazonProperties = amazonProperties;
    }
 
    @RequestMapping(value = "/{reader}")
-   public String readersBooks(@PathVariable("reader") String reader, Model model) {
-      final var readingList = readingListRepository.findByReader(reader);
+   public String readersBooks(@PathVariable("reader") String readerName, Model model) {
+      final var readingList = readingListRepository.findByReader(readerName);
+      final var reader = readerRepository.findByUsername(readerName);
       if (readingList != null) {
          model.addAttribute("books", readingList);
          model.addAttribute("reader", reader);
