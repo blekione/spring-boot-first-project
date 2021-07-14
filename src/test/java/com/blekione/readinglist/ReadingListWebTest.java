@@ -23,8 +23,8 @@ public class ReadingListWebTest {
    @Test
    void pageNotFound() throws Exception {
       // when
-      final var actualResponseEntity = restTemplate.getForEntity("http://localhost:" + port + "/bogusPage",
-            String.class);
+      final var actualResponseEntity = restTemplate.getForEntity("http://localhost:{port}/bogusPage",
+            String.class, port);
 
       // then
       assertThat(actualResponseEntity.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
