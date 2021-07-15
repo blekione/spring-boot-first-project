@@ -12,21 +12,25 @@ import com.blekione.readinglist.domain.Book;
 import com.blekione.readinglist.repository.ReaderRepository;
 import com.blekione.readinglist.repository.ReadingListRepository;
 
+import io.micrometer.core.instrument.MeterRegistry;
+
 @Controller
 @RequestMapping("/readingList")
 public class ReadingListController {
    private final ReadingListRepository readingListRepository;
    private final ReaderRepository readerRepository;
    private final AmazonProperties amazonProperties;
+   private final MeterRegistry registry;
 
    @Autowired
-   public ReadingListController(ReadingListRepository readingListRepository, ReaderRepository readerRepository, AmazonProperties amazonProperties) {
+   public ReadingListController(ReadingListRepository readingListRepository, ReaderRepository readerRepository, AmazonProperties amazonProperties, MeterRegistry registry) {
       this.readingListRepository = readingListRepository;
       this.readerRepository = readerRepository;
       this.amazonProperties = amazonProperties;
+      this.registry = registry;
    }
 
-   @RequestMapping(value = "/{reader}")
+   @RequestMapping(value = "/{reader}", method = RequestMethod.GET)
    public String readersBooks(@PathVariable("reader") String readerName, Model model) {
       final var readingList = readingListRepository.findByReader(readerName);
       final var reader = readerRepository.findByUsername(readerName);
@@ -42,6 +46,8 @@ public class ReadingListController {
    public String addToReadingList(@PathVariable("reader") String reader, Book book) {
       book.setReader(reader);
       readingListRepository.save(book);
+      registry.counter("baba-blah").increment();
+      registry.gauge("last_book_added", System.currentTimeMillis());
       return "redirect:/readingList/{reader}";
    }
 
